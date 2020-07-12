@@ -28,3 +28,15 @@ void LinesList::findlines() {
 list<string> & LinesList::getStringlist()  {
     return stringlist;
 }
+
+bool LinesList::IsEqual(const string &str) {
+    if(numberOfLines > 0)
+    {
+        if(stringlist.front() == str)
+        {
+            stringlist.pop_front();
+            return true;
+        }
+    }
+    return false;
+}

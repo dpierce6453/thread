@@ -23,6 +23,7 @@ private:
 public:
     list <string> & getStringlist();
     int getNumberOfLines() const;
+    bool IsEqual(const string &str);
 
 };
 

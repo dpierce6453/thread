@@ -12,11 +12,14 @@ class thread1 {
 public:
     thread1(const std::string &banner);
 
+    thread1(const std::string &banner, int delay);
+
     void operator()();
     const std::string &getBanner() const;
 
 private:
-    const std::string banner = {"Hello from the thread1 class"};
+    const std::string banner;
+    int delay;
 
 };
 

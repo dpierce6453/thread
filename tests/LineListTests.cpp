@@ -58,12 +58,11 @@ namespace {
         LinesList *ll = new LinesList(str1+ str2 + str3);
         ASSERT_TRUE(ll->getNumberOfLines() == 3);
 
-        list<std::string> sl = ll->getStringlist();
         for(string & str: teststrings)
         {
             if (str.back() == '\n') str.pop_back();
-            ASSERT_STREQ(sl.front().c_str(), str.c_str());
-            sl.pop_front();
+            ASSERT_STREQ(ll->getStringlist().front().c_str(), str.c_str());
+            ll->getStringlist().pop_front();
         }
         delete ll;
 
@@ -76,6 +75,26 @@ namespace {
         delete ll;
     }
 
+    TEST_F(LineListTests, IsEqualTest)
+    {
+        list<string> teststrings;
 
+        std::string str1 = "This is the first line\n";
+        std::string str2 = "This is the second line\n";
+        std::string str3 = "This is the third line";  // you can have an endl here or not.  does not matter.
+
+        teststrings.push_back(str1);
+        teststrings.push_back(str2);
+        teststrings.push_back(str3);
+
+        LinesList *ll = new LinesList(str1+ str2 + str3);
+        ASSERT_TRUE(ll->getNumberOfLines() == 3);
+
+        for(string & str: teststrings)
+        {
+            if (str.back() == '\n') str.pop_back();
+            ASSERT_TRUE(ll->IsEqual(str));
+        }
+    }
 }
 
