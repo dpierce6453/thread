@@ -7,6 +7,7 @@
 
 
 class command {
+public:
     virtual void go (void ) = 0;
 };
 

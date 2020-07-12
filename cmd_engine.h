@@ -11,7 +11,7 @@
 #include "command.h"
 #include "thread1.h"
 
-class cmd_engine : command {
+class cmd_engine : public command {
 private:
     const std::string str;
     thread1 *pMythread;
