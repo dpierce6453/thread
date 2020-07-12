@@ -7,6 +7,7 @@
 #include <LinesList.h>
 #include "thread1.h"
 #include "cmd_clean.h"
+#include "cmd_engine.h"
 
 namespace {
 
@@ -72,6 +73,21 @@ namespace {
         delete ll;
         delete cmdClean;
 
+    }
+
+    TEST_F(MyTests, TestEngineFullSpeedAhead)
+    {
+        ::testing::internal::CaptureStdout();
+        string str = "Full Speed Ahead";
+        cmd_engine *cmdFullSpeedAhead = new cmd_engine(str);
+        cmdFullSpeedAhead->go();
+
+        LinesList *ll = new LinesList(::testing::internal::GetCapturedStdout());
+        ASSERT_TRUE(ll->IsEqual(cmdFullSpeedAhead->str2));
+        ASSERT_TRUE(ll->IsEqual(str));
+
+        delete ll;
+        delete cmdFullSpeedAhead;
     }
 
 }

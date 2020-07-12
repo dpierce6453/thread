@@ -7,14 +7,15 @@
 
 #include <string>
 #include <thread>
+#include "command.h"
 #include "thread1.h"
 
 
-class cmd_clean {
+class cmd_clean : public command {
 public:
     const std::string str1 = "Hello from the Cleaning Thread.  Cleaning now...";
     const std::string str2 = "Waiting on last cleaning job to finish";
-    void go(void );
+    void go(void ) final;
     cmd_clean();
     virtual ~cmd_clean();
 
