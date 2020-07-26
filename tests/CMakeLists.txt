@@ -9,7 +9,7 @@ set(Headers
 
 set(Sources
 	MyTests.cpp
-	LineListTests.cpp)
+	LineListTests.cpp SafeQueueTests.cpp testThread.cpp testThread.h)
 
 add_executable(${This} ${Sources} ${Headers})
 

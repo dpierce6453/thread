@@ -17,10 +17,11 @@ set(Libheaders
 	LinesList.h
 	cmd_clean.h
 	cmd_engine.h
+	SafeQueue.h
 )
 
 add_library(Mylib STATIC ${Libsources} ${Libheaders})
 
-add_executable(thread main.cpp thread1.cpp thread1.h LinesList.cpp LinesList.h cmd_clean.cpp cmd_clean.h command.h cmd_engine.cpp cmd_engine.h)
+add_executable(thread main.cpp thread1.cpp thread1.h LinesList.cpp LinesList.h cmd_clean.cpp cmd_clean.h command.h cmd_engine.cpp cmd_engine.h SafeQueue.h)
 
 add_subdirectory(tests)

@@ -3,6 +3,7 @@
 //
 
 #include <sstream>
+#include <algorithm>
 #include "LinesList.h"
 
 
@@ -39,4 +40,13 @@ bool LinesList::IsEqual(const string &str) {
         }
     }
     return false;
+}
+
+bool LinesList::contains(const string &str) {
+    string str1 = stringlist.front();
+    bool ret = false;
+    auto it = std::find(stringlist.begin(), stringlist.end(), str1);
+    if (it != stringlist.end())
+        ret = true;
+    return (stringlist.end() != it);
 }

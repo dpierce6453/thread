@@ -63,6 +63,7 @@ namespace {
         {
             cmdClean->go();
         }
+        cmdClean->waitforthreadtofinish();
 
         LinesList *ll = new LinesList(::testing::internal::GetCapturedStdout());
         for(int i=0; i < numcleanings; i++)

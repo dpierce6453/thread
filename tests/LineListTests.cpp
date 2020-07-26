@@ -96,5 +96,27 @@ namespace {
             ASSERT_TRUE(ll->IsEqual(str));
         }
     }
+
+    TEST_F(LineListTests, ContainsTest)
+    {
+        list<string> teststrings;
+
+        std::string str1 = "Transmit: 1\n";
+        std::string str2 = "Trasnmit: 2\n";
+        std::string str3 = "Receive: 1";  // you can have an endl here or not.  does not matter.
+
+        teststrings.push_back(str1);
+        teststrings.push_back(str2);
+        teststrings.push_back(str3);
+
+        LinesList *ll = new LinesList(str1+ str2 + str3);
+
+        for(string & str: teststrings)
+        {
+            if (str.back() == '\n') str.pop_back();
+            ASSERT_TRUE(ll->contains(str));
+        }
+        delete ll;
+    }
 }
 

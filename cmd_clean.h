@@ -22,9 +22,11 @@ public:
 private:
     thread1 *pMythread;
     std::thread *cleaning_thread = nullptr;
-    int total_cleanings = 0;
+    int total_cleanings;
 public:
+    void waitforthreadtofinish();
     int getTotalCleanings() const;
+
 };
 
 
