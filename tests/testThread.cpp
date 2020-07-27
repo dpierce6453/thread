@@ -10,27 +10,33 @@
 #include "testThread.h"
 
 void testThread::operator()() {
-    if(tx)
+    int y;
+    for (int i = 0; i < numloops; i++)
     {
-        transmit();
-    } else
-    {
-        receive();
+        if(tx)
+        {
+            y=i;
+            sq->push(y);
+        } else
+        {
+            y=sq->pop();
+        }
+        randomsleep(y);
     }
 }
 
-void testThread::receive() const {
-    int i=0;
-    while(i<numloops)
-    {
-        int rx = sq->pop();
-        std::cout << str << rx << std::endl;
-        i++;
-        std::this_thread::sleep_for(std::chrono::milliseconds (100));
-    }
+
+void testThread::randomsleep(int x) const
+{
+    std::cout << str << x << std::endl;
+    int randms = (rand() % 50) + 50;
+    std::this_thread::sleep_for(std::chrono::milliseconds (randms));
 }
 
-testThread::testThread(SafeQueue<int> *sq, bool transmit): sq(sq), tx(transmit) {
+testThread::testThread(SafeQueue<int> *sq, bool transmit):
+    sq(sq),
+    tx(transmit)
+{
     if(tx)
     {
         str = "Transmit: ";
@@ -39,17 +45,6 @@ testThread::testThread(SafeQueue<int> *sq, bool transmit): sq(sq), tx(transmit) 
         str = "Receive: ";
     }
     numloops = 10;
-}
-
-void testThread::transmit() const {
-    int i=0;
-    while (i<numloops)
-    {
-        sq->push(i);
-        std::cout << str << i << std::endl;
-        i++;
-        std::this_thread::sleep_for(std::chrono::milliseconds (50));
-    }
 }
 
 testThread::testThread(SafeQueue<int> *sq, bool transmit, std::string str, int numberofloops):

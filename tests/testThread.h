@@ -21,8 +21,7 @@ private:
     std::string str;
     int numloops;
 
-    void receive() const;
-    void transmit() const;
+    void randomsleep(int x) const;
 };
 
 
