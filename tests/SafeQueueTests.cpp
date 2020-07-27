@@ -25,6 +25,16 @@ namespace {
 
         virtual ~SafeQueueTests() {}
 
+    public:
+        void createTestStrings(const string &str, const int numloops, list<std::string> &checkstrings) const
+        {
+            for(int i=0; i<numloops; i++)
+            {
+                std::string st = str + std::to_string(i);
+                checkstrings.push_back(st);
+            }
+        }
+
     };
 
 
@@ -50,16 +60,8 @@ namespace {
         const int numloops = 10;
 
         list<std::string> checkstrings;
-        for(int i=0; i<numloops; i++)
-        {
-            std::string st = strtx + std::to_string(i);
-            checkstrings.push_back(st);
-        }
-        for(int i=0; i<numloops; i++)
-        {
-            std::string st = strrx + std::to_string(i);
-            checkstrings.push_back(st);
-        }
+        createTestStrings(strtx, numloops, checkstrings);
+        createTestStrings(strrx, numloops, checkstrings);
 
         ::testing::internal::CaptureStdout();
         SafeQueue <int> sq;
