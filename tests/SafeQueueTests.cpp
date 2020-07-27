@@ -45,22 +45,26 @@ namespace {
 
     TEST_F(SafeQueueTests, ThreadTest)
     {
+        const std::string strtx = "Transmit: ";
+        const std::string strrx = "Receive: ";
+        const int numloops = 10;
+
         list<std::string> checkstrings;
-        for(int i=0; i<10; i++)
+        for(int i=0; i<numloops; i++)
         {
-            std::string st = "Transmit: " + i;
+            std::string st = strtx + std::to_string(i);
             checkstrings.push_back(st);
         }
-        for(int i=0; i<10; i++)
+        for(int i=0; i<numloops; i++)
         {
-            std::string st = "Receive: " + i;
+            std::string st = strrx + std::to_string(i);
             checkstrings.push_back(st);
         }
 
         ::testing::internal::CaptureStdout();
         SafeQueue <int> sq;
-        testThread tx(&sq, true);
-        testThread rx(&sq, false);
+        testThread tx(&sq, true, strtx, numloops);
+        testThread rx(&sq, false, strrx, numloops);
         std::thread threadX(tx);
         std::thread threadY(rx);
         threadY.join();
@@ -74,7 +78,6 @@ namespace {
             checkstrings.pop_front();
         }
         delete ll;
-
     }
 
 }

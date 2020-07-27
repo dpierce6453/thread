@@ -11,12 +11,15 @@
 class testThread {
 public:
     testThread(SafeQueue<int> *sq, bool);
+    testThread(SafeQueue<int> *sq, bool, std::string str, int numberofloops);
 
     void operator()();
 
 private:
     SafeQueue <int> *sq;
     bool tx;
+    std::string str;
+    int numloops;
 
     void receive() const;
     void transmit() const;
