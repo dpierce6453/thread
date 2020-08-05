@@ -5,9 +5,9 @@
 #include <thread>
 #include <gtest/gtest.h>
 #include <LinesList.h>
-#include "thread1.h"
-#include "cmd_clean.h"
-#include "cmd_engine.h"
+#include "Exercise1/thread1.h"
+#include "Exercise1/cmd_clean.h"
+#include "Exercise1/cmd_engine.h"
 
 namespace {
 

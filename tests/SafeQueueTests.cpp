@@ -55,18 +55,18 @@ namespace {
 
     TEST_F(SafeQueueTests, ThreadTest)
     {
-        const std::string strtx = "Transmit: ";
-        const std::string strrx = "Receive: ";
-        const int numloops = 10;
+        const std::string strTx = "Transmit: ";
+        const std::string strRx = "Receive: ";
+        const int numLoops = 10;
 
         list<std::string> checkstrings;
-        createTestStrings(strtx, numloops, checkstrings);
-        createTestStrings(strrx, numloops, checkstrings);
+        createTestStrings(strTx, numLoops, checkstrings);
+        createTestStrings(strRx, numLoops, checkstrings);
 
         ::testing::internal::CaptureStdout();
         SafeQueue <int> sq;
-        testThread tx(&sq, true, strtx, numloops);
-        testThread rx(&sq, false, strrx, numloops);
+        testThread tx(&sq, true, strTx, numLoops);
+        testThread rx(&sq, false, strRx, numLoops);
         std::thread threadX(tx);
         std::thread threadY(rx);
         threadY.join();
