@@ -3,12 +3,48 @@
 //
 
 #include <iostream>
+#include <interface.pb.h>
+
 #include "queueThread.h"
 #include "workerThread.h"
 
+void queueThread::threadWorker()
+{
+    if(echo)
+    {
+        std::cout << threadName << " is Running" << std::endl;
+    }
+    std::string cmd;
+    while(true)
+    {
+        cmd = pSQ->pop();
+        gpc::Command rxCommand;
+        if (rxCommand.ParseFromString(cmd) == false) break;  // should throw an exception here
+        if(rxCommand.cmd() == stopCmd) break;
+
+        std::vector<commandData>::iterator it;
+        for(it=cdVec.begin() ; it != cdVec.end(); it++)
+        {
+            if(rxCommand.cmd() == it->cmd)
+            {
+                std::cout << threadName << " received command: " << it->cmdStr << std::endl;
+                break;
+            }
+        }
+        if(it == cdVec.end())
+        {
+           std::cout << threadName << " received INVALID command: " << rxCommand.cmd() << std::endl;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds (delay));
+    }
+    if(echo)
+    {
+        std::cout << threadName << " stopping" << std::endl;
+    }
+}
 
 void queueThread::startThread()  {
-    if(isStopCmdSet() && isCmdDataGood() && isQueueSet())
+    if(isReady())
     {
         workerThread wt(this);
         pThisThread = new std::thread(wt);
@@ -20,7 +56,7 @@ void queueThread::startThread()  {
 }
 
 bool queueThread::isCmdDataGood() const {
-    if( cdVec.empty())
+    if( cdVec.empty() )
         return false;
     for(const commandData &cd : cdVec)
     {
@@ -30,14 +66,13 @@ bool queueThread::isCmdDataGood() const {
 }
 
 bool queueThread::setCmdData(commandData &cd) {
-    if(cd.isGood() == false)
-    {
-        return false;
-    } else
+    bool ret = false;
+    if( cd.isGood() )
     {
         cdVec.push_back(cd);
+        ret=true;
     }
-    return true;
+    return ret;
 }
 
 bool queueThread::isQueueSet() const {
@@ -48,41 +83,14 @@ bool queueThread::isQueueSet() const {
     return true;
 }
 
-void queueThread::threadWorker()
-{
-    if(echo)
-    {
-        std::cout << threadName << " is Running" << std::endl;
-    }
-    int cmd;
-    while((cmd = pSQ->pop()) != stopCmd)
-    {
-        std::vector<commandData>::iterator it = cdVec.begin();
-        for(it; it != cdVec.end(); it++)
-        {
-            if(cmd == it->cmd)
-            {
-                std::cout << threadName << " received command: " << it->cmdStr << std::endl;
-                break;
-            }
-        }
-        if(it == cdVec.end())
-        {
-           std::cout << threadName << " received INVALID command: " << cmd << std::endl;
-        }
-        std::this_thread::sleep_for(std::chrono::milliseconds (delay));
-    }
-    if(echo)
-    {
-        std::cout << threadName << " stopping" << std::endl;
-    }
-}
+
+bool queueThread::isReady() const { return isStopCmdSet() && isCmdDataGood() && isQueueSet(); }
 
 void queueThread::setDelay(int delay) {
     queueThread::delay = delay;
 }
 
-void queueThread::setpSQ(SafeQueue<int> *pSq) {
+void queueThread::setpSQ(SafeQueue<std::string> *pSq) {
     pSQ = pSq;
 }
 

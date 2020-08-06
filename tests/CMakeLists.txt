@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 
 set(This MyTests)
-set(GTEST_DIR C:/Users/Dan/source/repos/googletest)
+#set(GTEST_DIR ${DAN_LOCAL_DIR}/googletest)
 set(GTEST_LIB_DIR ${GTEST_DIR}/build/lib)
 
 set(Headers
@@ -20,7 +20,7 @@ target_include_directories(${This} SYSTEM PUBLIC
 
 target_link_directories(${This} PUBLIC ${GTEST_LIB_DIR})
 
-target_link_libraries(${This} PUBLIC gmock gtest gtest_main	Mylib )
+target_link_libraries(${This} PUBLIC gmock gtest gtest_main	thread_lib)
 
 add_test(
 	NAME ${This}

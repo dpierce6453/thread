@@ -3,6 +3,8 @@
 //
 
 #include <gtest/gtest.h>
+#include <interface.pb.h>
+
 #include <Exercise2/commandData.h>
 #include <LinesList.h>
 #include "Exercise2/queueThread.h"
@@ -54,7 +56,7 @@ namespace {
     TEST_F(queueThreadTests, StartThreadSuccess)
     {
         queueThread qt;
-        SafeQueue<int> sq;
+        SafeQueue<std::string> sq;
 
         commandData cd;
         cd.cmdStr = "Full Speed Ahead";
@@ -75,10 +77,25 @@ namespace {
 
         ::testing::internal::CaptureStdout();
         qt.startThread();
-        sq.push(1);
-        sq.push(2);
-        sq.push(3);
-        sq.push(100);
+        gpc::Command command;
+        command.set_cmd(1);
+        command.set_cmdstr("Full Speed Ahead");
+        sq.push(command.SerializeAsString());
+        command.set_cmd(2);
+        command.set_cmdstr("All Engines Stop");
+        sq.push(command.SerializeAsString());
+        command.set_cmd(3);
+        command.set_cmdstr("Invalid Command");
+        sq.push(command.SerializeAsString());
+        command.set_cmd(100);
+        command.set_cmdstr("Stop Thread");
+        sq.push(command.SerializeAsString());
+
+
+        //sq.push(1);
+        //sq.push(2);
+        //sq.push(3);
+        //sq.push(100);
         qt.waitForThreadToFinish();
         LinesList *ll = new LinesList(::testing::internal::GetCapturedStdout());
 
