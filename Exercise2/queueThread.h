@@ -8,43 +8,42 @@
 
 #include <vector>
 #include <thread>
+#include <interface.pb.h>
+
 #include "QueueThreadCannotStart.h"
-#include "commandData.h"
 #include "../SafeQueue.h"
 
 class queueThread {
 
-    int stopCmd = 0;
-
 private:
     const std::string qtExceptionMsg = "QueueThread cannot start:  Critical Data Missing";
-    std::string threadName;
-    std::vector<commandData> cdVec;
-    bool isCmdDataGood() const;
+    std::string threadName = "Thread has no name";
+    std::vector<gpc::CmdType> cdVec;
     SafeQueue<std::string> *pSQ = nullptr;
     int delay = 1000;
     bool echo = false;
     std::thread *pThisThread = nullptr;
+
+    bool isCmdDataGood() const;
     bool isQueueSet() const;
     bool isReady() const;
+    void threadWorker();
 
 public:
     void setDelay(int delay);
     void setEcho(bool echo);
     void setThreadName(const std::string &threadName);
     void setpSQ(SafeQueue<std::string> *pSq);
-    bool setCmdData(commandData &cd);
-    void setStopCmd(int stopCmd);
+    bool setCmdData(gpc::CmdType cmd);
     const std::string &getQtExceptionMsg() const;
 
-    bool isStopCmdSet() const;
-
     void startThread() ;
-    void threadWorker();
     void waitForThreadToFinish();
 
     queueThread();
     virtual ~queueThread();
+
+    friend class workerThread;
 
 };
 

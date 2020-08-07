@@ -3,7 +3,6 @@
 //
 
 #include <iostream>
-#include <interface.pb.h>
 
 #include "queueThread.h"
 #include "workerThread.h"
@@ -14,24 +13,24 @@ void queueThread::threadWorker()
     {
         std::cout << threadName << " is Running" << std::endl;
     }
-    std::string cmd;
     while(true)
     {
-        cmd = pSQ->pop();
-        gpc::Command rxCommand;
-        if (rxCommand.ParseFromString(cmd) == false) break;  // should throw an exception here
-        if(rxCommand.cmd() == stopCmd) break;
+        std::string cmd = pSQ->pop();
 
-        std::vector<commandData>::iterator it;
-        for(it=cdVec.begin() ; it != cdVec.end(); it++)
+        gpc::Command rxCommand;
+        if (rxCommand.ParseFromString(cmd) == false)
+            continue;  // should throw an exception here
+
+        if(rxCommand.cmd() == gpc::STOP_PROCESSING_CMDS)
+            break;
+
+        std::vector<gpc::CmdType>::iterator it;
+        it = std::find(cdVec.begin(), cdVec.end(), rxCommand.cmd());
+        if(it != cdVec.end())
         {
-            if(rxCommand.cmd() == it->cmd)
-            {
-                std::cout << threadName << " received command: " << it->cmdStr << std::endl;
-                break;
-            }
+            std::cout << threadName << " received command: " << rxCommand.cmdstr() << std::endl;
         }
-        if(it == cdVec.end())
+        else
         {
            std::cout << threadName << " received INVALID command: " << rxCommand.cmd() << std::endl;
         }
@@ -58,21 +57,16 @@ void queueThread::startThread()  {
 bool queueThread::isCmdDataGood() const {
     if( cdVec.empty() )
         return false;
-    for(const commandData &cd : cdVec)
+    for(const gpc::CmdType& cmd: cdVec)
     {
-        if(cd.isGood() == false) return false;
+        if(!gpc::CmdType_IsValid(cmd)) return false;
     }
     return true;
 }
 
-bool queueThread::setCmdData(commandData &cd) {
-    bool ret = false;
-    if( cd.isGood() )
-    {
-        cdVec.push_back(cd);
-        ret=true;
-    }
-    return ret;
+bool queueThread::setCmdData(gpc::CmdType cmd) {
+    cdVec.push_back(cmd);
+    return true;
 }
 
 bool queueThread::isQueueSet() const {
@@ -84,7 +78,7 @@ bool queueThread::isQueueSet() const {
 }
 
 
-bool queueThread::isReady() const { return isStopCmdSet() && isCmdDataGood() && isQueueSet(); }
+bool queueThread::isReady() const { return isCmdDataGood() && isQueueSet(); }
 
 void queueThread::setDelay(int delay) {
     queueThread::delay = delay;
@@ -106,20 +100,12 @@ void queueThread::waitForThreadToFinish() {
     pThisThread->join();
 }
 
-bool queueThread::isStopCmdSet() const {
-    return (stopCmd != 0);
-}
-
-void queueThread::setStopCmd(int stopCmd) {
-    queueThread::stopCmd = stopCmd;
-}
 
 const std::string &queueThread::getQtExceptionMsg() const {
     return qtExceptionMsg;
 }
 
 queueThread::queueThread() {
-    threadName = "Thread has no name";
 }
 
 queueThread::~queueThread() {

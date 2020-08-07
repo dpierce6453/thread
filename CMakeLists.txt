@@ -23,8 +23,7 @@ set(Libsources
     Exercise1/thread1.cpp
     Exercise1/cmd_clean.cpp
     Exercise1/cmd_engine.cpp
-	Exercise2/commandData.cpp
-	Exercise2/workerThread.cpp
+		Exercise2/workerThread.cpp
 	Exercise2/queueThread.cpp
 	Exercise2/QueueThreadCannotStart.cpp
 )
@@ -35,8 +34,7 @@ set(Libheaders
 	Exercise1/thread1.h
     Exercise1/cmd_clean.h
     Exercise1/cmd_engine.h
-	Exercise2/commandData.h
-	Exercise2/workerThread.h
+		Exercise2/workerThread.h
 	Exercise2/queueThread.h
 	Exercise2/QueueThreadCannotStart.h
 	)

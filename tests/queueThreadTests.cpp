@@ -5,7 +5,6 @@
 #include <gtest/gtest.h>
 #include <interface.pb.h>
 
-#include <Exercise2/commandData.h>
 #include <LinesList.h>
 #include "Exercise2/queueThread.h"
 
@@ -31,13 +30,7 @@ namespace {
         queueThread *qt = new queueThread();
         delete qt;
     }
-    TEST_F(queueThreadTests, StopCmdSet)
-    {
-        queueThread qt;
-        ASSERT_FALSE(qt.isStopCmdSet());
-        qt.setStopCmd(10);
-        ASSERT_TRUE(qt.isStopCmdSet());
-    }
+
     TEST_F(queueThreadTests, StartThreadError)
     {
         queueThread qt;
@@ -58,19 +51,13 @@ namespace {
         queueThread qt;
         SafeQueue<std::string> sq;
 
-        commandData cd;
-        cd.cmdStr = "Full Speed Ahead";
-        cd.cmd = 1;
-
-        commandData cd2;
-        cd2.cmdStr = "All Engines Stop";
-        cd2.cmd = 2;
+        const std::string str1 = "Full Speed Ahead";
+        const std::string str2 = "All Engines Stop";
 
         std::string threadName = "Test Thread #1";
-        qt.setStopCmd(100);
         qt.setpSQ(&sq);
-        qt.setCmdData(cd);
-        qt.setCmdData(cd2);
+        qt.setCmdData(gpc::FULL_STEAM_AHEAD);
+        qt.setCmdData(gpc::ALL_ENGINES_STOP);
         qt.setThreadName(threadName);
         qt.setEcho(true);
         qt.setDelay(50);
@@ -78,52 +65,36 @@ namespace {
         ::testing::internal::CaptureStdout();
         qt.startThread();
         gpc::Command command;
-        command.set_cmd(1);
-        command.set_cmdstr("Full Speed Ahead");
+        command.set_cmd(gpc::FULL_STEAM_AHEAD);
+        command.set_cmdstr(str1);
         sq.push(command.SerializeAsString());
-        command.set_cmd(2);
-        command.set_cmdstr("All Engines Stop");
+        command.set_cmd(gpc::ALL_ENGINES_STOP);
+        command.set_cmdstr(str2);
         sq.push(command.SerializeAsString());
-        command.set_cmd(3);
+        command.set_cmd(gpc::CLEAN_SHIP);
         command.set_cmdstr("Invalid Command");
         sq.push(command.SerializeAsString());
-        command.set_cmd(100);
+        command.set_cmd(gpc::STOP_PROCESSING_CMDS);
         command.set_cmdstr("Stop Thread");
         sq.push(command.SerializeAsString());
 
-
-        //sq.push(1);
-        //sq.push(2);
-        //sq.push(3);
-        //sq.push(100);
         qt.waitForThreadToFinish();
         LinesList *ll = new LinesList(::testing::internal::GetCapturedStdout());
 
         ASSERT_TRUE(ll->IsEqual(threadName + " is Running"));
-        ASSERT_TRUE(ll->IsEqual(threadName + " received command: " + cd.cmdStr));
-        ASSERT_TRUE(ll->IsEqual(threadName + " received command: " + cd2.cmdStr));
+        ASSERT_TRUE(ll->IsEqual(threadName + " received command: " + str1));
+        ASSERT_TRUE(ll->IsEqual(threadName + " received command: " + str2));
         ASSERT_TRUE(ll->IsEqual(threadName + " received INVALID command: " + to_string(3)));
         ASSERT_TRUE(ll->IsEqual(threadName + " stopping"));
 
     }
 
-    TEST_F(queueThreadTests, commandDataTests)
-    {
-        commandData cd;
-        ASSERT_FALSE(cd.isGood());
-        cd.cmdStr = "This is the cmd string";
-        ASSERT_FALSE(cd.isGood());
-        cd.cmd = 1;
-        ASSERT_TRUE(cd.isGood());
-    }
+
     TEST_F(queueThreadTests, setCommandDataTests)
     {
         queueThread qt;
-        commandData cd;
-        ASSERT_FALSE(qt.setCmdData(cd));
-        cd.cmd = 1;
-        cd.cmdStr = "Full Speed Ahead";
-        ASSERT_TRUE(qt.setCmdData(cd));
+        ASSERT_TRUE(qt.setCmdData(gpc::FULL_STEAM_AHEAD));
+        ASSERT_TRUE(qt.setCmdData(gpc::ALL_ENGINES_STOP));
 
     }
 }
