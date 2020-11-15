@@ -20,7 +20,12 @@ private:
     std::string threadName = "Thread has no name";
     std::vector<gpc::CmdType> cdVec;
     SafeQueue<std::string> *pSQ = nullptr;
-    int delay = 1000;
+    int delayGoodCmd = 1000;
+    int delayBadCmd = 1000;
+public:
+    void setDelayBadCmd(int delayBadCmd);
+
+private:
     bool echo = false;
     std::thread *pThisThread = nullptr;
 
@@ -30,7 +35,7 @@ private:
     void threadWorker();
 
 public:
-    void setDelay(int delay);
+    void setDelayGoodCmd(int delay);
     void setEcho(bool echo);
     void setThreadName(const std::string &threadName);
     void setpSQ(SafeQueue<std::string> *pSq);

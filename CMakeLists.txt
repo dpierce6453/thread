@@ -23,7 +23,7 @@ set(Libsources
     Exercise1/thread1.cpp
     Exercise1/cmd_clean.cpp
     Exercise1/cmd_engine.cpp
-		Exercise2/workerThread.cpp
+	Exercise2/workerThread.cpp
 	Exercise2/queueThread.cpp
 	Exercise2/QueueThreadCannotStart.cpp
 )
@@ -34,23 +34,28 @@ set(Libheaders
 	Exercise1/thread1.h
     Exercise1/cmd_clean.h
     Exercise1/cmd_engine.h
-		Exercise2/workerThread.h
+	Exercise2/workerThread.h
 	Exercise2/queueThread.h
 	Exercise2/QueueThreadCannotStart.h
-	)
+    )
 
 set(Mainsources
 	Exercise1/thread1.cpp
 	Exercise1/thread1.h
-	LinesList.cpp
-	LinesList.h
 	Exercise1/cmd_clean.cpp
 	Exercise1/cmd_clean.h
 	Exercise1/command.h
 	Exercise1/cmd_engine.cpp
 	Exercise1/cmd_engine.h
-	SafeQueue.h
 	Exercise1/Exercise1Main.cpp
+	Exercise2/Exercise2Main.cpp
+	Exercise2/queueThread.h
+	Exercise2/queueThread.cpp
+	Exercise2/workerThread.h
+	Exercise2/workerThread.cpp
+	LinesList.cpp
+	LinesList.h
+	SafeQueue.h
 )
 
 
@@ -60,11 +65,18 @@ target_include_directories(${Thislib} PUBLIC ${Protobuf_INCLUDE_DIR} ${GPC_PROJE
 
 target_link_directories(${Thislib} PUBLIC ${GPC_PROJECT} ${Protobuf_LIBRARIES})
 
-target_link_libraries(${Thislib} PUBLIC gpcinterfaces
-    PRIVATE protoc
+target_link_libraries(${Thislib}
+	PUBLIC gpcinterfaces
     PRIVATE protobuf
 )
 
+
 add_executable(${This} main.cpp ${Mainsources})
+target_include_directories(${This} PUBLIC ${Protobuf_INCLUDE_DIR} ${GPC_PROJECT})
+target_link_directories(${This} PUBLIC ${GPC_PROJECT} ${Protobuf_LIBRARIES})
+target_link_libraries(${This}
+	PUBLIC gpcinterfaces
+    PRIVATE protobuf
+)
 
 add_subdirectory(tests)

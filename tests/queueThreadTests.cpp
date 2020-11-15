@@ -60,7 +60,7 @@ namespace {
         qt.setCmdData(gpc::ALL_ENGINES_STOP);
         qt.setThreadName(threadName);
         qt.setEcho(true);
-        qt.setDelay(50);
+        qt.setDelayGoodCmd(50);
 
         ::testing::internal::CaptureStdout();
         qt.startThread();

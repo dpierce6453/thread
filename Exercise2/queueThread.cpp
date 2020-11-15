@@ -16,6 +16,7 @@ void queueThread::threadWorker()
     while(true)
     {
         std::string cmd = pSQ->pop();
+        int delay = delayGoodCmd;
 
         gpc::Command rxCommand;
         if (rxCommand.ParseFromString(cmd) == false)
@@ -33,6 +34,7 @@ void queueThread::threadWorker()
         else
         {
            std::cout << threadName << " received INVALID command: " << rxCommand.cmd() << std::endl;
+           delay = delayBadCmd;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds (delay));
     }
@@ -46,6 +48,7 @@ void queueThread::startThread()  {
     if(isReady())
     {
         workerThread wt(this);
+        //passing an object to std::thread with the () overridden will use that function as the thread function.
         pThisThread = new std::thread(wt);
     }
     else
@@ -80,8 +83,8 @@ bool queueThread::isQueueSet() const {
 
 bool queueThread::isReady() const { return isCmdDataGood() && isQueueSet(); }
 
-void queueThread::setDelay(int delay) {
-    queueThread::delay = delay;
+void queueThread::setDelayGoodCmd(int delay) {
+    queueThread::delayGoodCmd = delay;
 }
 
 void queueThread::setpSQ(SafeQueue<std::string> *pSq) {
@@ -109,4 +112,8 @@ queueThread::queueThread() {
 }
 
 queueThread::~queueThread() {
+}
+
+void queueThread::setDelayBadCmd(int delayBadCmd) {
+    queueThread::delayBadCmd = delayBadCmd;
 }

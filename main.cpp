@@ -5,10 +5,11 @@
 float getDouble( void );
 
 int Ex1Main();
+int Ex2Main();
 
 int main() {
 
-    return Ex1Main();
+    return Ex2Main();
 
 }
 
