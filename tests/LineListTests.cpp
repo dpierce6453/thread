@@ -116,6 +116,8 @@ namespace {
             if (str.back() == '\n') str.pop_back();
             ASSERT_TRUE(ll->contains(str));
         }
+
+        ASSERT_FALSE(ll->contains("Bad String"));
         delete ll;
     }
 }

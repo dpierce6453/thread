@@ -34,10 +34,10 @@ void SafeQueue<T>::push(const T &item) {
 
 template<typename T>
 T SafeQueue<T>::pop() {
-    std::unique_lock<std::mutex> mlock(mutex_);
+    auto lock = std::unique_lock<std::mutex>{mutex_};
     while (queue_.empty())
     {
-      cond_.wait(mlock);
+      cond_.wait(lock);
     }
     auto item = queue_.front();
     queue_.pop();

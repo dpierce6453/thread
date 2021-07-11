@@ -11,7 +11,7 @@ void queueThread::threadWorker()
 {
     if(echo)
     {
-        std::cout << threadName << " is Running" << std::endl;
+        std::cout <<  threadName << " is Running" << std::endl;
     }
     while(true)
     {
@@ -19,7 +19,7 @@ void queueThread::threadWorker()
         int delay = delayGoodCmd;
 
         gpc::Command rxCommand;
-        if (rxCommand.ParseFromString(cmd) == false)
+        if (!rxCommand.ParseFromString(cmd))
             continue;  // should throw an exception here
 
         if(rxCommand.cmd() == gpc::STOP_PROCESSING_CMDS)
@@ -60,11 +60,7 @@ void queueThread::startThread()  {
 bool queueThread::isCmdDataGood() const {
     if( cdVec.empty() )
         return false;
-    for(const gpc::CmdType& cmd: cdVec)
-    {
-        if(!gpc::CmdType_IsValid(cmd)) return false;
-    }
-    return true;
+    return (std::all_of(cdVec.begin(),cdVec.end(), [](gpc::CmdType c){return gpc::CmdType_IsValid(c);}));
 }
 
 bool queueThread::setCmdData(gpc::CmdType cmd) {

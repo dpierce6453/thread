@@ -28,7 +28,8 @@ void testThread::operator()() {
 
 void testThread::randomsleep(int x) const
 {
-    std::cout << str << x << std::endl;
+    std::string str1 = str + std::to_string(x) + '\n';
+    std::cout << str1;
     int randms = (rand() % 50) + 50;
     std::this_thread::sleep_for(std::chrono::milliseconds (randms));
 }

@@ -43,10 +43,6 @@ bool LinesList::IsEqual(const string &str) {
 }
 
 bool LinesList::contains(const string &str) {
-    string str1 = stringlist.front();
-    bool ret = false;
-    auto it = std::find(stringlist.begin(), stringlist.end(), str1);
-    if (it != stringlist.end())
-        ret = true;
+    auto it = std::find(stringlist.begin(), stringlist.end(), str);
     return (stringlist.end() != it);
 }

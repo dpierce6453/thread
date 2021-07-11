@@ -61,6 +61,7 @@ namespace {
         qt.setThreadName(threadName);
         qt.setEcho(true);
         qt.setDelayGoodCmd(50);
+        qt.setDelayBadCmd(50);
 
         ::testing::internal::CaptureStdout();
         qt.startThread();
